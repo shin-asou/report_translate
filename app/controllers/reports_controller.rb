@@ -18,14 +18,14 @@ class ReportsController < ApplicationController
   def show
     @report = Report.find(params[:id])
 
-    if @report
-      charset = nil
-      html = open(@report.src_url) do |f|
-        charset = f.charset # 文字種別を取得
-        f.read # htmlを読み込んで変数htmlに渡す
-      end
-     doc = Nokogiri::HTML.parse(html, nil, charset)
-     p doc.content
+    # if @report
+    #   charset = nil
+    #   html = open(@report.src_url) do |f|
+    #     charset = f.charset # 文字種別を取得
+    #     f.read # htmlを読み込んで変数htmlに渡す
+    #   end
+    #  doc = Nokogiri::HTML.parse(html, nil, charset)
+    #  p doc.content
     end
 
     respond_to do |format|
@@ -53,7 +53,7 @@ class ReportsController < ApplicationController
   # POST /reports
   # POST /reports.json
   def create
-    @report = Report.new(params[:report])
+    @report = Report.new(report_params)
 
     respond_to do |format|
       if @report.save
@@ -92,5 +92,9 @@ class ReportsController < ApplicationController
       format.html { redirect_to reports_url }
       format.json { head :no_content }
     end
+  end
+
+  def report_params
+    params.require(:report).permit(:title, :body, :src_url)
   end
 end
